@@ -12,10 +12,6 @@ const mysqldump = require('mysqldump')
 console.log("Enter in cron")
 //
 exec('sudo mysql -u root -pMind@1234 -h13.235.179.4 -e "SHOW DATABASES;" | tr -d "| " | grep -v Database', async (error, stdout, stderr) => {
-
-
-
-
     if (error) {
         console.log("mysqlDump error: ", error)
     }
@@ -48,6 +44,7 @@ exec('sudo mysql -u root -pMind@1234 -h13.235.179.4 -e "SHOW DATABASES;" | tr -d
         if (err) {
             return 'listing issue :- ' + err.message
         } else {
+            console.log(data, "data")
             await data.Contents.forEach(function (obj, index) {
                 date_file = new Date(obj.LastModified).getTime();
                 const today = new Date();
@@ -93,8 +90,6 @@ exec('sudo mysql -u root -pMind@1234 -h13.235.179.4 -e "SHOW DATABASES;" | tr -d
             return resolve(data)
         });
     })
-    // }
-
 });
 
 
