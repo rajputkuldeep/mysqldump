@@ -12,7 +12,9 @@ const mysqldump = require('mysqldump')
 console.log("Enter in cron")
 
 exec('sudo mysql -u root -pMind@1234 -h13.235.179.4 -e "SHOW DATABASES;" | tr -d "| " | grep -v Database', async (error, stdout, stderr) => {
-    console.log(stdout, "stdout")
+    let dbArr = []
+    dbArr.push(stdout)
+    console.log(dbArr, "dbarr")
     if (error) {
         console.log("mysqlDump error: ", error)
     }
