@@ -63,7 +63,7 @@ exec('sudo mysql -u root -pMind@1234 -h13.235.179.4 -e "SHOW DATABASES;" | tr -d
                                 console.log("deleted old one !")
                                 resolve()
                             }
-                            reject(err)
+                            reject(err, "errrrrrr")
                         })
                     })
                 }
