@@ -18,6 +18,7 @@ execSync('mysqldump --user=root --password=Mind@1234 --host=13.235.179.4 --all-d
     if (error) {
         console.log("mysqlDump error: ", error)
     }
+    console.log("Dump done !!!")
     AWS.config.update({
         accessKeyId: 'AKIARFWSRSLTCTSTEG45',
         secretAccessKey: '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'
@@ -44,6 +45,7 @@ execSync('mysqldump --user=root --password=Mind@1234 --host=13.235.179.4 --all-d
                         }
                         s3.deleteObject(params, (err, data) => {
                             if (data) {
+                                console.log("deleted old one !")
                                 resolve()
                             }
                             reject(err)
@@ -70,7 +72,7 @@ execSync('mysqldump --user=root --password=Mind@1234 --host=13.235.179.4 --all-d
         };
         s3.upload(params, (s3Err, data) => {
             if (s3Err) throw s3Err
-            console.log(`File uploaded successfully at ${data}`)
+            console.log(`File uploaded successfully at ${data} with name ${timestamp}`)
             execSync('rm -rf ./zip/*')
             execSync('rm -rf pack.zip')
             return resolve(data)
