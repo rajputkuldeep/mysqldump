@@ -11,10 +11,7 @@ const mysqldump = require('mysqldump')
 // cron.schedule('* * * * *', async () => {
 console.log("Enter in cron")
 
-
-
-
-execSync('mysqldump --user=root --password=Mind@1234 --host=13.235.179.4 --all-databases > ./zip/dump.sql', async (error, stderr) => {
+exec('mysqldump --user=root --password=Mind@1234 --host=13.235.179.4 --all-databases > ./zip/dump.sql', async (error, stderr) => {
     if (error) {
         console.log("mysqlDump error: ", error)
     }
