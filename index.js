@@ -11,15 +11,7 @@ const mysqldump = require('mysqldump')
 // cron.schedule('* * * * *', async () => {
 console.log("Enter in cron")
 
-exec('sh ./run.sh',
-    (error, stdout, stderr) => {
-        console.log(stdout);
-        console.log(stderr);
-        if (error !== null) {
-            console.log(`exec error: ${error}`);
-        }
-    });
-
+execSync('mysqldump --user=root --password=Mind@1234 --host=13.235.179.4 --all-databases > ./zip/dumpfile.sql')
 
 
 // mysqldump({
@@ -27,9 +19,10 @@ exec('sh ./run.sh',
 //         host: '13.235.179.4',
 //         user: 'root',
 //         password: 'Mind@1234',
-//         database: 'mrms_old',
+//         database: ""
 //     },
 //     dumpToFile: './zip/dump.sql',
+//     compressFile: true,
 // }).then(async () => {
 
 //     AWS.config.update({
