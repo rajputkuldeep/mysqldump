@@ -88,8 +88,8 @@ exec('sudo mysql -u root -pMind@1234 -h13.235.179.4 -e "SHOW DATABASES;" | tr -d
         s3.upload(params, (s3Err, data) => {
             if (s3Err) throw s3Err
             console.log(`File uploaded successfully at ${data} with name ${timestamp}`)
-            execSync('rm -rf ./zip/*')
-            execSync('rm -rf pack.zip')
+            // execSync('rm -rf ./zip/*')
+            // execSync('rm -rf pack.zip')
             return resolve(data)
         });
     })
