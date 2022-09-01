@@ -11,79 +11,72 @@ const mysqldump = require('mysqldump')
 // cron.schedule('* * * * *', async () => {
 console.log("Enter in cron")
 
-execSync('mysqldump --user=root --password=Mind@1234 --host=13.235.179.4 --all-databases > ./zip/dumpfile.sql')
 
 
-// mysqldump({
-//     connection: {
-//         host: '13.235.179.4',
-//         user: 'root',
-//         password: 'Mind@1234',
-//         database: ""
-//     },
-//     dumpToFile: './zip/dump.sql',
-//     compressFile: true,
-// }).then(async () => {
 
-//     AWS.config.update({
-//         accessKeyId: 'AKIARFWSRSLTCTSTEG45',
-//         secretAccessKey: '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'
-//     })
-//     const s3 = new AWS.S3()
-//     let deleteParams = {
-//         Bucket: 'mysql-dump-2022-09-01',
-//         Delimiter: '/',
-//     };
+execSync('mysqldump --user=root --password=Mind@1234 --host=13.235.179.4 --all-databases > ./zip/dump.sql', async (error) => {
+    if (error) {
+        console.log("mysqlDump error: ", error)
+    }
+    AWS.config.update({
+        accessKeyId: 'AKIARFWSRSLTCTSTEG45',
+        secretAccessKey: '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'
+    })
+    const s3 = new AWS.S3()
+    let deleteParams = {
+        Bucket: 'mysql-dump-2022-09-01',
+        Delimiter: '/',
+    };
 
-//     await s3.listObjects(deleteParams, async function (err, data) {
-//         if (err) {
-//             return 'listing issue :- ' + err.message
-//         } else {
-//             data.Contents.forEach(function (obj, index) {
-//                 date_file = new Date(obj.LastModified).getTime();
-//                 const today = new Date();
-//                 const beforserven = today.setDate(today.getDate())
-//                 if (beforserven > date_file) {
-//                     new Promise((resolve, reject) => {
-//                         const params = {
-//                             Bucket: 'mysql-dump-2022-09-01',
-//                             Key: `${obj.Key}`,
-//                         }
-//                         s3.deleteObject(params, (err, data) => {
-//                             if (data) {
-//                                 resolve()
-//                             }
-//                             reject(err)
-//                         })
-//                     })
-//                 }
-//             })
-//         }
-//     })
+    await s3.listObjects(deleteParams, async function (err, data) {
+        if (err) {
+            return 'listing issue :- ' + err.message
+        } else {
+            data.Contents.forEach(function (obj, index) {
+                date_file = new Date(obj.LastModified).getTime();
+                const today = new Date();
+                const beforserven = today.setDate(today.getDate())
+                if (beforserven > date_file) {
+                    new Promise((resolve, reject) => {
+                        const params = {
+                            Bucket: 'mysql-dump-2022-09-01',
+                            Key: `${obj.Key}`,
+                        }
+                        s3.deleteObject(params, (err, data) => {
+                            if (data) {
+                                resolve()
+                            }
+                            reject(err)
+                        })
+                    })
+                }
+            })
+        }
+    })
 
-//     await zip('./zip', './pack.zip')
+    await zip('./zip', './pack.zip')
 
-//     const file = "./pack.zip";
-//     const fileStream = fs.createReadStream(file);
+    const file = "./pack.zip";
+    const fileStream = fs.createReadStream(file);
 
-//     const timestamp = Date.now()
+    const timestamp = Date.now()
 
-//     await new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
 
-//         const params = {
-//             Bucket: 'mysql-dump-2022-09-01',
-//             Key: `${timestamp}.zip`,
-//             Body: fileStream
-//         };
-//         s3.upload(params, (s3Err, data) => {
-//             if (s3Err) throw s3Err
-//             console.log(`File uploaded successfully at ${data}`)
-//             execSync('rm -rf ./zip/*')
-//             execSync('rm -rf pack.zip')
-//             return resolve(data)
-//         });
-//     })
-// });
+        const params = {
+            Bucket: 'mysql-dump-2022-09-01',
+            Key: `${timestamp}.zip`,
+            Body: fileStream
+        };
+        s3.upload(params, (s3Err, data) => {
+            if (s3Err) throw s3Err
+            console.log(`File uploaded successfully at ${data}`)
+            execSync('rm -rf ./zip/*')
+            execSync('rm -rf pack.zip')
+            return resolve(data)
+        });
+    })
+});
 
 
 
